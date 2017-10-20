@@ -10,7 +10,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
-import static org.hibernate.validator.internal.util.CollectionHelper.newArrayList;
+import static com.gmaslowski.async.serviuce.LongRunningButActuallySleepingService.longRunning;
 
 @RestController
 public class Controller {
@@ -20,7 +20,6 @@ public class Controller {
     public Future<List<String>> getDriversWorker() {
         return new CompletableFuture<>().supplyAsync(() -> longRunning());
     }
-
 
     @RequestMapping(value = "/http", method = RequestMethod.GET)
     @ResponseBody
@@ -34,13 +33,5 @@ public class Controller {
         return () -> longRunning();
     }
 
-    private List<String> longRunning() {
-        try {
-            Thread.sleep(15000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return newArrayList();
-    }
 }
 

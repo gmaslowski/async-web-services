@@ -1,5 +1,6 @@
 package com.gmaslowski.async.cxf;
 
+import com.gmaslowski.async.serviuce.LongRunningButActuallySleepingService;
 import org.apache.cxf.annotations.UseAsyncMethod;
 import org.apache.cxf.jaxws.ServerAsyncResponse;
 
@@ -15,12 +16,7 @@ public class BaeldungImpl implements Baeldung {
 
     @UseAsyncMethod
     public String hello(String name) {
-            try {
-                Thread.sleep(15000L);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return "Hello " + name + "!";
+        return LongRunningButActuallySleepingService.longRunning(name);
     }
 
     @Override
@@ -28,12 +24,8 @@ public class BaeldungImpl implements Baeldung {
         final ServerAsyncResponse<String> r = new ServerAsyncResponse<>();
 
         CompletableFuture.runAsync(() -> {
-            try {
-                Thread.sleep(15000L);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            r.set("Hello " + requestType + "!");
+            String retVal = LongRunningButActuallySleepingService.longRunning(requestType);
+            r.set(retVal);
             asyncHandler.handleResponse(r);
         });
 
@@ -44,7 +36,6 @@ public class BaeldungImpl implements Baeldung {
     public Response<String> helloAsync(String requestType) {
         return null;
     }
-
 
     public String register(Student student) {
         counter++;
